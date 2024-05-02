@@ -1,0 +1,13 @@
+﻿@page "/Gyms"
+<h3>GymsPage</h3>
+
+@code {
+    public List<GymResponse> gyms { get; set; }
+    HttpClient http = new HttpClient();
+
+    protected override void OnInitialized()
+    {
+        
+        base.OnInitialized();
+    }
+}
