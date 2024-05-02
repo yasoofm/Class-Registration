@@ -54,7 +54,12 @@ namespace ClassRegistrationBack.Controllers
                     Id = p.Id, Sections = p.Sections.Select(x => new SectionResponse
                     { 
                         Id = x.Id, Capacity = x.Capacity,
-                        Duration = x.Duration, SectionType = x.SectionType, Time = x.Time
+                        Duration = x.Duration, SectionType = x.SectionType, Time = x.Time,
+                        Instructor = new InstructorResponse 
+                        {
+                            Description = x.Instructor.Description, FirstName = x.Instructor.FirstName, LastName = x.Instructor.LastName,
+                            Id = x.Instructor.Id, PhoneNumber = x.Instructor.PhoneNumber
+                        },
                     }).ToList(),
                     Address = p.Address, Name = p.Name 
                 })
@@ -103,14 +108,21 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                return _context.instructors.Select(p => new InstructorResponse
+                return _context.instructors.Include(x => x.Sections).Select(p => new InstructorResponse
                 {
                     Id = p.Id,
                     PhoneNumber = p.PhoneNumber,
                     FirstName = p.FirstName,
                     LastName = p.LastName,
                     Description = p.Description,
-                    Sections = p.Sections
+                    Sections = p.Sections.Select(p => new SectionResponse
+                    {
+                        Id = p.Id,
+                        Capacity = p.Capacity,
+                        SectionType = p.SectionType,
+                        Time = p.Time,
+                        Duration = p.Duration,
+                    }).ToList()
                     
 
                 })
