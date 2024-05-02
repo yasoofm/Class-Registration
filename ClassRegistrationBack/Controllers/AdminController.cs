@@ -30,7 +30,7 @@ namespace ClassRegistrationBack.Controllers
                 };
                 _context.gyms.Add(gym);
                 _context.SaveChanges();
-                return Created();
+                return Created(nameof(AddGym) ,new { Id = gym.Id });
             }
             catch (Exception ex)
             {
