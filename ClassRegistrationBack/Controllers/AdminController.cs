@@ -47,6 +47,69 @@ namespace ClassRegistrationBack.Controllers
             }
         }
 
+
+
+
+        [HttpPost("add-section")]
+        [ProducesResponseType(typeof(IActionResult), 201)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult AddSection(AddSectionRequest addSectionRequest)
+        {
+            try
+            {
+                var section = new Section()
+                {
+                    Instructor = new Instructor
+                    {
+                        PhoneNumber = addSectionRequest.Instructor.PhoneNumber,
+                        Description = addSectionRequest.Instructor.Description,
+                        FirstName = addSectionRequest.Instructor.FirstName,
+                        LastName = addSectionRequest.Instructor.LastName
+                    },
+                    Duration = addSectionRequest.Duration,
+                    Time = addSectionRequest.Time,
+                    SectionType = addSectionRequest.SectionType,
+                    Capacity = addSectionRequest.Capacity
+                    
+                };
+                _context.sections.Add(section);
+                _context.SaveChanges();
+                return Created(nameof(AddGym), new { Id = section.Id });
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+
+
+        [HttpPost("add-intructor")]
+        [ProducesResponseType(typeof(IActionResult), 201)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult AddIntructor(AddInstructorRequest addInstructorRequest)
+        {
+            try
+            {
+                var intructor = new Instructor()
+                {
+                PhoneNumber = addInstructorRequest.PhoneNumber,
+                Description = addInstructorRequest.Description,
+                FirstName = addInstructorRequest.FirstName,
+                LastName =addInstructorRequest.LastName
+
+                };
+                _context.instructors.Add(intructor);
+                _context.SaveChanges();
+                return Created(nameof(AddGym), new { Id = intructor.Id });
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+
         [HttpGet("get-gyms")]
         [ProducesResponseType(typeof(List<GymResponse>), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
