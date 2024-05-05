@@ -3,6 +3,9 @@
 <EditForm Model="@model" OnValidSubmit="OnValidSubmit" >
     <DataAnnotationsValidator />           
             <MudCard >
+                <MudCardHeader>
+                    <MudText>Login</MudText>
+                </MudCardHeader>
                 <MudCardContent>
                     <MudTextField Label="Username"
                                     @bind-Value="model.Username" For="@(() => model.Username)" Required />
@@ -10,7 +13,8 @@
                                     @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password" Required/>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" Style="object-position: center">Register</MudButton>
+                    <MudText>Don't have an account? </MudText><MudLink Href="/Register" Underline="Underline.Always" Style="margin-left: 5px;">Register</MudLink>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" Style="object-position: center">Login</MudButton>
                 </MudCardActions>
             </MudCard>          
 </EditForm>
@@ -43,8 +47,8 @@
 
     private void OnValidSubmit(EditContext context)
     {
+
         success = true;
-        StateHasChanged();
     }
     
 }

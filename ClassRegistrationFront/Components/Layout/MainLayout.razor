@@ -1,14 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+        <MudAppBar Color="Color.Primary" Fixed="false">
+            <MudIconButton Icon="@Icons.Material.Rounded.Person" Color="Color.Inherit" Edge="Edge.Start" />
+            <MudSpacer />
+            <MudIconButton Icon="@(IsLoggedIn ? Icons.Material.Rounded.Logout : Icons.Material.Rounded.Login)" Color="Color.Inherit" OnClick="OnLoginClick" />
+        </MudAppBar>
 
         <article class="content px-4">
             @Body
@@ -25,3 +24,26 @@
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
+
+@code
+{
+    [CascadingParameter] public GlobalAppState State { set; get; }
+    [Inject] public NavigationManager manager { get; set; }
+    public bool IsLoggedIn { set; get; }
+
+    protected override Task OnInitializedAsync()
+    {
+        IsLoggedIn = State.IsLoggedIn();
+        return base.OnInitializedAsync();
+    }
+
+    public void OnLoginClick()
+    {
+        manager.NavigateTo("/Login");
+    }
+
+    public void OnProfileClick()
+    {
+        manager.NavigateTo("/Profile");
+    }
+}

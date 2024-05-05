@@ -7,6 +7,7 @@ namespace ClassRegistrationBack.Controllers
     [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
+
     {
         private readonly ILogger<UserController> _logger;
         private readonly ClassContext _context;
@@ -16,21 +17,31 @@ namespace ClassRegistrationBack.Controllers
             _logger = logger;
             _context = dbContext;
         }
-        public IActionResult Index()
+        [HttpGet("[action]")]
+        public IActionResult InstructorDetails(int Id)
         {
-            return Ok();
+        using (var context = _context)
+            {
+
+                var instructorsDetails = context.instructors.Where(r => r.Id == Id);
+                if (instructorsDetails == null)
+                {
+                    return NotFound();
+                }
+                return Ok(instructorsDetails);
+            }
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Gyms(int id)
+        [HttpGet]
+        public ActionResult<Enumerable<Gyms>> Gyms()
         {
-            var gym = _context.Gyms.Find();
+            var gyms = _context.Gyms;
 
-            if (gym == null)
+            if (gyms == null)
             {
                 return NotFound();
             }
-            return Ok(_context.Gyms);
+            return Ok(gyms);
         }
 
         [HttpGet]
@@ -72,9 +83,40 @@ namespace ClassRegistrationBack.Controllers
                 return NotFound();
             }
         }
+            
+        [HttpGet("[action]")]
+        public IActionResult AdressDetails(int Id)
+        {
 
+            using (var context = _context)
+            {
 
+                var instructorsDetails = context.addresses.Where(a => a.Id == Id);
+                if (instructorsDetails == null)
+                {
+                    return NotFound();
+                }
+                return Ok(instructorsDetails);
+            }
+        }
 
+        [HttpDelete("delete-booking/{id}")]
+        public IActionResult DeleteBooking(int id)
+        {
+            var booking = _context.bookings.Find(id);
 
+            if (booking == null) { 
+            
+            return NotFound();
+            }
+
+            _context.bookings.Remove(booking);
+            _context.SaveChanges();
+
+         return NoContent();
+
+        }
     }
-}
+    }
+
+
