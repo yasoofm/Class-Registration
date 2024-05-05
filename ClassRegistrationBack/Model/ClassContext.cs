@@ -5,12 +5,12 @@ namespace ClassRegistrationBack.Model
 {
     public class ClassContext : DbContext
     {
-       public DbSet<Gym> gyms { get; set; }
-       public DbSet<Address> addresses { get; set; }
-       public DbSet<Booking> bookings { get; set; }
-       public DbSet<Instructor> instructors { get; set; }
-       public DbSet<Section> sections { get; set; }
-        public DbSet<User> users { get; set; }
+       public DbSet<Gym> Gyms { get; set; }
+       public DbSet<Address> Addresses { get; set; }
+       public DbSet<Booking> Bookings { get; set; }
+       public DbSet<Instructor> Instructors { get; set; }
+       public DbSet<Section> Sections { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public ClassContext(DbContextOptions<ClassContext> options) : base(options) { }
 
