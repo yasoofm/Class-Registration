@@ -37,7 +37,7 @@ namespace ClassRegistrationBack.Controllers
                     },
                     Name = addGymRequest.Name
                 };
-                _context.gyms.Add(gym);
+                _context.Gyms.Add(gym);
                 _context.SaveChanges();
                 return Created(nameof(AddGym) ,new { Id = gym.Id });
             }

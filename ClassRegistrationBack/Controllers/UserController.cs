@@ -1,13 +1,13 @@
 ﻿using ClassRegistrationBack.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ClassRegistrationBack.Controllers
 {
-    [ApiController]
     [Route("[controller]")]
-    public class UserController : Controller
+    [ApiController]
+    public class UserController : ControllerBase
+
     {
         private readonly ILogger<UserController> _logger;
         private readonly ClassContext _context;
@@ -20,8 +20,7 @@ namespace ClassRegistrationBack.Controllers
         [HttpGet("[action]")]
         public IActionResult InstructorDetails(int Id)
         {
-
-            using (var context = _context)
+        using (var context = _context)
             {
 
                 var instructorsDetails = context.instructors.Where(r => r.Id == Id);
@@ -32,6 +31,59 @@ namespace ClassRegistrationBack.Controllers
                 return Ok(instructorsDetails);
             }
         }
+
+        [HttpGet]
+        public ActionResult<Enumerable<Gyms>> Gyms()
+        {
+            var gyms = _context.Gyms;
+
+            if (gyms == null)
+            {
+                return NotFound();
+            }
+            return Ok(gyms);
+        }
+
+        [HttpGet]
+        public IEnumerable<Section> GetAll()
+        {
+            return _context.Sections;
+        }
+
+        [HttpPost]
+        public IActionResult Book(int userId, int sectionId)
+        {
+            var user = _context.Users.Find(userId);
+            var section = _context.Sections
+                .Include(s => s.Bookings)
+                .FirstOrDefault(s => s.Id == sectionId);
+
+            if (user != null && section != null)
+            {
+                if (section.Bookings.Count < 5) 
+                {
+                    var booking = new Booking
+                    {
+                        CreateAt = DateTime.UtcNow,
+                        Section = section,
+                        User = user
+                    };
+                    section.Bookings.Add(booking);
+                    _context.SaveChanges();
+
+                    return Ok("Booking successful");
+                }
+                else
+                {
+                    return Conflict("Section is fully booked");
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+            
         [HttpGet("[action]")]
         public IActionResult AdressDetails(int Id)
         {
@@ -66,4 +118,5 @@ namespace ClassRegistrationBack.Controllers
         }
     }
     }
+
 
