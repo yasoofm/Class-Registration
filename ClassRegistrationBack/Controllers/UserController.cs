@@ -23,7 +23,7 @@ namespace ClassRegistrationBack.Controllers
         using (var context = _context)
             {
 
-                var instructorsDetails = context.instructors.Where(r => r.Id == Id);
+                var instructorsDetails = context.Instructors.Where(r => r.Id == Id);
                 if (instructorsDetails == null)
                 {
                     return NotFound();
@@ -33,7 +33,7 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Enumerable<Gyms>> Gyms()
+        public ActionResult<IEnumerable<Gym>> Gyms()
         {
             var gyms = _context.Gyms;
 
@@ -91,7 +91,7 @@ namespace ClassRegistrationBack.Controllers
             using (var context = _context)
             {
 
-                var instructorsDetails = context.addresses.Where(a => a.Id == Id);
+                var instructorsDetails = context.Addresses.Where(a => a.Id == Id);
                 if (instructorsDetails == null)
                 {
                     return NotFound();
@@ -103,14 +103,14 @@ namespace ClassRegistrationBack.Controllers
         [HttpDelete("delete-booking/{id}")]
         public IActionResult DeleteBooking(int id)
         {
-            var booking = _context.bookings.Find(id);
+            var booking = _context.Bookings.Find(id);
 
             if (booking == null) { 
             
             return NotFound();
             }
 
-            _context.bookings.Remove(booking);
+            _context.Bookings.Remove(booking);
             _context.SaveChanges();
 
          return NoContent();
