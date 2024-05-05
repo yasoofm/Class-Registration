@@ -32,7 +32,7 @@ namespace ClassRegistrationBack.Controllers
                     Address = new Address 
                     { 
                         Area = addGymRequest.Address.Area, Avenue = addGymRequest.Address.Avenue,
-                        Block = addGymRequest.Address.Block, BuildingNumber = addGymRequest.Address.BuildignNumber,
+                        Block = addGymRequest.Address.Block, BuildingNumber = addGymRequest.Address.BuildingNumber,
                         Street = addGymRequest.Address.Street
                     },
                     Name = addGymRequest.Name
