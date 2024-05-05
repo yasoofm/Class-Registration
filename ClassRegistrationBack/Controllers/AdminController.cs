@@ -72,7 +72,7 @@ namespace ClassRegistrationBack.Controllers
                     Capacity = addSectionRequest.Capacity
                     
                 };
-                _context.sections.Add(section);
+                _context.Sections.Add(section);
                 _context.SaveChanges();
                 return Created(nameof(AddGym), new { Id = section.Id });
             }
@@ -99,7 +99,7 @@ namespace ClassRegistrationBack.Controllers
                 LastName =addInstructorRequest.LastName
 
                 };
-                _context.instructors.Add(intructor);
+                _context.Instructors.Add(intructor);
                 _context.SaveChanges();
                 return Created(nameof(AddGym), new { Id = intructor.Id });
             }
@@ -118,7 +118,7 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                return _context.gyms.Select(p =>  new GymResponse() { Id = p.Id, Name = p.Name }).ToList();               
+                return _context.Gyms.Select(p =>  new GymResponse() { Id = p.Id, Name = p.Name }).ToList();               
             }
             catch(Exception ex)
             {
@@ -135,7 +135,7 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                return _context.sections.Where(x => x.Id == id).Select(p => new SectionResponse
+                return _context.Sections.Where(x => x.Id == id).Select(p => new SectionResponse
                 {
                     Id = p.Id,
                     Time = p.Time,
@@ -162,7 +162,7 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                return _context.instructors.Include(x => x.Sections).Select(p => new InstructorResponse
+                return _context.Instructors.Include(x => x.Sections).Select(p => new InstructorResponse
                 {
                     Id = p.Id,
                     PhoneNumber = p.PhoneNumber,
@@ -199,7 +199,7 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                return _context.users.Include(p => p.Bookings).ThenInclude(p => p.Section).Select(p => new UserResponse
+                return _context.Users.Include(p => p.Bookings).ThenInclude(p => p.Section).Select(p => new UserResponse
                 {
                     Id = p.Id,
                     PhoneNumber = p.PhoneNumber,
@@ -237,13 +237,13 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                var gym = _context.gyms.Find(id);
+                var gym = _context.Gyms.Find(id);
                 if (gym == null)
                 {
                     return NotFound();
                 }
 
-                _context.gyms.Remove(gym);
+                _context.Gyms.Remove(gym);
                 _context.SaveChanges();
 
                 return Ok();
@@ -263,13 +263,13 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                var userdelete = _context.users.Find(id);
+                var userdelete = _context.Users.Find(id);
                 if (userdelete == null)
                 {
                     return NotFound();
                 }
 
-                _context.users.Remove(userdelete);
+                _context.Users.Remove(userdelete);
                 _context.SaveChanges();
 
                 return Ok();
@@ -288,13 +288,13 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                var deletesection = _context.sections.Find(id);
+                var deletesection = _context.Sections.Find(id);
                 if (deletesection == null)
                 {
                     return NotFound();
                 }
 
-                _context.sections.Remove(deletesection);
+                _context.Sections.Remove(deletesection);
                 _context.SaveChanges();
 
                 return Ok();
@@ -316,13 +316,13 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                var deleteinstructor = _context.instructors.Find(id);
+                var deleteinstructor = _context.Instructors.Find(id);
                 if (deleteinstructor == null)
                 {
                     return NotFound();
                 }
 
-                _context.instructors.Remove(deleteinstructor);
+                _context.Instructors.Remove(deleteinstructor);
                 _context.SaveChanges();
 
                 return Ok();
