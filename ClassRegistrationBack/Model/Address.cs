@@ -10,4 +10,13 @@
         public int Block { get; set; }
     }
 
+    public class AddressRequest
+    {
+        public string BuildignNumber { get; set; }
+        public string? Avenue { get; set; }
+        public string Street { get; set; }
+        public string Area { get; set; }
+        public int Block { get; set; }
+
+    }
 }

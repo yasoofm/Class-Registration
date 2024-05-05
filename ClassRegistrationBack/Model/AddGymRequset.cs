@@ -2,7 +2,7 @@
 {
     public class AddGymRequset
     {
-        public Address Address { get; set; }
+        public AddressRequest Address { get; set; }
         public string Name { get; set; }
     }
 }

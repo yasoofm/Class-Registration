@@ -1,5 +1,19 @@
 ﻿@page "/Gyms"
 <h3>GymsPage</h3>
+<MudStack AlignItems="AlignItems.Center">
+    @foreach(var gym in gyms)
+    {   
+        <MudCard Style="width: 800px;">
+            <MudCardMedia Image="https://lh3.googleusercontent.com/p/AF1QipOwgshDpo2SaKr3GaWZjFnynF3mpWIINxn4hOMe=s1360-w1360-h1020" Height=600 />
+            <MudCardContent>
+                <MudLink Href=@("/gyms/" + gym.Id)>@gym.Name</MudLink>
+            </MudCardContent>
+            <MudCardActions>
+
+            </MudCardActions>
+        </MudCard>
+    }   
+</MudStack>
 
 @code {
     public List<GymResponse> gyms { get; set; }
@@ -7,7 +21,12 @@
 
     protected override void OnInitialized()
     {
-        
+        gyms = [
+            new GymResponse{ Id = 1, Address = new AddressResponse(), Name = "branch 1" },
+            new GymResponse{ Id = 2, Address = new AddressResponse(), Name = "branch 2" },
+            new GymResponse{ Id = 3, Address = new AddressResponse(), Name = "branch 3" },
+            new GymResponse{ Id = 4, Address = new AddressResponse(), Name = "branch 4" },
+        ];
         base.OnInitialized();
     }
 }

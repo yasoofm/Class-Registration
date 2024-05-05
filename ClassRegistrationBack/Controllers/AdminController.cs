@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClassRegistrationBack.Controllers
 {
-
+    [ApiController]
+    [Route("[controller]")]
     public class AdminController : Controller
     {
 
@@ -28,7 +29,12 @@ namespace ClassRegistrationBack.Controllers
             {
                 var gym = new Gym()
                 {
-                    Address = addGymRequest.Address,
+                    Address = new Address 
+                    { 
+                        Area = addGymRequest.Address.Area, Avenue = addGymRequest.Address.Avenue,
+                        Block = addGymRequest.Address.Block, BuildingNumber = addGymRequest.Address.BuildignNumber,
+                        Street = addGymRequest.Address.Street
+                    },
                     Name = addGymRequest.Name
                 };
                 _context.gyms.Add(gym);
@@ -42,29 +48,14 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpGet("get-gyms")]
-        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(typeof(List<GymResponse>), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<List<GymResponse>> GetGyms()
         {
             try
             {
-                return _context.gyms.Include(p => p.Sections).Include(p => p.Address).Select(p => new GymResponse 
-                {
-                    Id = p.Id, Sections = p.Sections.Select(x => new SectionResponse
-                    { 
-                        Id = x.Id, Capacity = x.Capacity,
-                        Duration = x.Duration, SectionType = x.SectionType, Time = x.Time,
-                        Instructor = new InstructorResponse 
-                        {
-                            Description = x.Instructor.Description, FirstName = x.Instructor.FirstName, LastName = x.Instructor.LastName,
-                            Id = x.Instructor.Id, PhoneNumber = x.Instructor.PhoneNumber
-                        },
-                    }).ToList(),
-                    Address = p.Address, Name = p.Name 
-                })
-                .ToList();
-
+                return _context.gyms.Select(p =>  new GymResponse() { Id = p.Id, Name = p.Name }).ToList();               
             }
             catch(Exception ex)
             {
@@ -175,7 +166,7 @@ namespace ClassRegistrationBack.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-gym/{id}")]
         [ProducesResponseType(typeof(IActionResult), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -201,7 +192,7 @@ namespace ClassRegistrationBack.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-user/{id}")]
         [ProducesResponseType(typeof(IActionResult), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -226,7 +217,7 @@ namespace ClassRegistrationBack.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-section/{id}")]
         [ProducesResponseType(typeof(IActionResult), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -254,7 +245,7 @@ namespace ClassRegistrationBack.Controllers
         
         
         
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-instructor/{id}")]
         [ProducesResponseType(typeof(IActionResult), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ClassRegistrationBack.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
@@ -15,6 +17,7 @@ namespace ClassRegistrationBack.Controllers
             _logger = logger;
             _context = dbContext;
         }
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
