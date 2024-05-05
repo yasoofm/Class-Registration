@@ -17,13 +17,7 @@ namespace ClassRegistrationBack.Controllers
             _logger = logger;
             _context = dbContext;
         }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpGet]
+        [HttpGet("[action]")]
         public IActionResult InstructorDetails(int Id)
         {
 
@@ -38,8 +32,7 @@ namespace ClassRegistrationBack.Controllers
                 return Ok(instructorsDetails);
             }
         }
-
-        [HttpGet]
+        [HttpGet("[action]")]
         public IActionResult AdressDetails(int Id)
         {
 
@@ -55,7 +48,7 @@ namespace ClassRegistrationBack.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete-booking/{id}")]
         public IActionResult DeleteBooking(int id)
         {
             var booking = _context.bookings.Find(id);
