@@ -1,6 +1,31 @@
 ﻿@page "/gyms/{Id:int}"
 <h3>SectionsPage @Id</h3>
 
+<MudStack>
+    @foreach(var item in sections)
+    {      
+        <Collapse Item="item" />
+    }
+</MudStack>
+
+
 @code {
     [Parameter] public int Id { get; set; }
+    [CascadingParameter] GlobalAppState State { get; set; }
+
+    List<SectionResponse> sections = [];
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            var http = State.CreateClient();
+            sections = await http.GetFromJsonAsync<List<SectionResponse>>($"/Admin/get-sections/{Id}");
+        } catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+    }
+
 }

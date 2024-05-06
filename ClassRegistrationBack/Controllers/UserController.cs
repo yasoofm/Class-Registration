@@ -60,7 +60,7 @@ namespace ClassRegistrationBack.Controllers
 
             if (user != null && section != null)
             {
-                if (section.Bookings.Count < 5) 
+                if (section.Bookings.Count < section.Capacity) 
                 {
                     var booking = new Booking
                     {
