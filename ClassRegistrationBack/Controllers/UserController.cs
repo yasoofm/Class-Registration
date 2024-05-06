@@ -83,7 +83,13 @@ namespace ClassRegistrationBack.Controllers
                 return NotFound();
             }
         }
-            
+
+        [HttpGet("Bookings/{id}")]
+        public IEnumerable<Booking> GetBooking(int id)
+        {
+            return _context.Bookings.Where(x => x.User.Id == id);
+        }
+
         [HttpGet("[action]")]
         public IActionResult AdressDetails(int Id)
         {

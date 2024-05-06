@@ -331,6 +331,7 @@ namespace ClassRegistrationBack.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
+
         }
 
     }
