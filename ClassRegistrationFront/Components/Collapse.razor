@@ -18,7 +18,6 @@
     [Parameter] public SectionResponse Item { get; set; }
     [CascadingParameter] public GlobalAppState State { get; set; }
 
-    HttpClient http = new HttpClient();
     bool _expanded = false;
 
     private void OnExpandCollapseClick()
@@ -28,6 +27,13 @@
 
     private async Task OnBookClick()
     {
-        //await http.PostAsync($"https://localhost:7288/User/Book?userId={State.UserId}&");
+        try
+        {
+            var http = State.CreateClient();
+            var response = await http.PostAsync($"/User/Book?userId={State.UserId}&sectionId{Item.Id}", null);
+        } catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
 }

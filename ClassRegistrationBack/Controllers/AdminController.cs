@@ -122,14 +122,7 @@ namespace ClassRegistrationBack.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<List<GymResponse>> GetGyms()
         {
-            try
-            {
-                return _context.Gyms.Select(p =>  new GymResponse() { Id = p.Id, Name = p.Name }).ToList();               
-            }
-            catch(Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ex);
-            }
+            return _context.Gyms.Select(p =>  new GymResponse() { Id = p.Id, Name = p.Name }).ToList();               
         }
 
 

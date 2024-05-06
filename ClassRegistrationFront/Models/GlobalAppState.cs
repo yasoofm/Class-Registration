@@ -10,6 +10,7 @@ namespace ClassRegistrationFront.Models
         public string Token { get; set; }
         public string Username { get; set; }
         public int UserId { get; set; }
+        public bool IsLoggedIn { get; set; } = false;
 
         public void SaveToken(string token)
         {
@@ -22,13 +23,10 @@ namespace ClassRegistrationFront.Models
             UserId = int.Parse(jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == "yousefmubarak.id")?.Value ?? "0");
             Token = token;
         }
-        public bool IsLoggedIn()
+
+        public void RemoveToken()
         {
-            if(Token == null)
-            {
-                return false;
-            }
-            return true;
+            Token = "";
         }
 
         public HttpClient CreateClient()

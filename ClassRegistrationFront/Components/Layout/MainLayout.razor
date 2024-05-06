@@ -6,7 +6,13 @@
         <MudAppBar Color="Color.Primary" Fixed="false">
             <MudIconButton Icon="@Icons.Material.Rounded.Person" Color="Color.Inherit" Edge="Edge.Start" />
             <MudSpacer />
-            <MudIconButton Icon="@(IsLoggedIn ? Icons.Material.Rounded.Logout : Icons.Material.Rounded.Login)" Color="Color.Inherit" OnClick="OnLoginClick" />
+            @if (State.IsLoggedIn)
+            {
+                <MudIconButton Icon="@Icons.Material.Rounded.Logout" Color="Color.Inherit" OnClick="OnLogutClick" />
+            } else
+            {
+                <MudIconButton Icon="@Icons.Material.Rounded.Login" Color="Color.Inherit" OnClick="OnLoginClick" />
+            }           
         </MudAppBar>
 
         <article class="content px-4">
@@ -29,17 +35,17 @@
 {
     [CascadingParameter] public GlobalAppState State { set; get; }
     [Inject] public NavigationManager manager { get; set; }
-    public bool IsLoggedIn { set; get; }
-
-    protected override Task OnInitializedAsync()
-    {
-        IsLoggedIn = State.IsLoggedIn();
-        return base.OnInitializedAsync();
-    }
 
     public void OnLoginClick()
     {
         manager.NavigateTo("/Login");
+    }
+
+    public void OnLogutClick()
+    {
+        State.RemoveToken();
+        State.IsLoggedIn = false;
+        manager.NavigateTo("/Gyms");
     }
 
     public void OnProfileClick()

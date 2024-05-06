@@ -11,6 +11,10 @@
                                     @bind-Value="model.Username" For="@(() => model.Username)" Required />
                     <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
                                     @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password" Required/>
+                    @if (IsShown)
+                    {
+                        <MudAlert Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Center" ShowCloseIcon="true" CloseIconClicked="CloseMe">Username or password are incorrect!</MudAlert>
+                    }          
                 </MudCardContent>
                 <MudCardActions>
                     <MudText>Don't have an account? </MudText><MudLink Href="/Register" Underline="Underline.Always" Style="margin-left: 5px;">Register</MudLink>
@@ -21,43 +25,55 @@
 
 
 @code {
-        [CascadingParameter] public GlobalAppState State { get; set; }
+    [CascadingParameter] public GlobalAppState State { get; set; }
+    [Inject] NavigationManager manager { get; set; }
 
-        LoginRequest model = new LoginRequest();
+    bool IsShown = false;
+    LoginRequest model = new LoginRequest();
 
 
-        // public class RegisterAccountForm
-        // {
-        //     [Required]
-        //     [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
-        //     public string Username { get; set; }
+    // public class RegisterAccountForm
+    // {
+    //     [Required]
+    //     [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
+    //     public string Username { get; set; }
 
-        //     [Required]
-        //     [EmailAddress]
-        //     public string Email { get; set; }
+    //     [Required]
+    //     [EmailAddress]
+    //     public string Email { get; set; }
 
-        //     [Required]
-        //     [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
-        //     public string Password { get; set; }
+    //     [Required]
+    //     [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
+    //     public string Password { get; set; }
 
-        //     [Required]
-        //     [Compare(nameof(Password))]
-        //     public string Password2 { get; set; }
+    //     [Required]
+    //     [Compare(nameof(Password))]
+    //     public string Password2 { get; set; }
 
     // }
 
 
-        private async Task OnValidSubmit(EditContext context)
+    public void CloseMe()
+    {
+        IsShown = false;
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        try
         {
-            try
+            var http = State.CreateClient();
+            var response = await http.PostAsJsonAsync("/Auth/login", model);
+            if (response.IsSuccessStatusCode)
             {
-                var http = State.CreateClient();
-                var response = await http.PostAsJsonAsync("/Auth/login", model);
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
-                    State.SaveToken(result.Token);
-                }            
+                var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
+                State.SaveToken(result.Token);
+                State.IsLoggedIn = true;
+                manager.NavigateTo("/Gyms");
+            } else
+            {
+                IsShown = true;
+            }     
         } catch (HttpRequestException ex)
         {
             Console.WriteLine(ex);
