@@ -39,7 +39,10 @@ namespace ClassRegistrationBack.Controllers
             }
 
             var newAccount = UserAccount.Create(userRegistration.UserName,userRegistration.Password,false);
-
+            newAccount.Email = userRegistration.Email;
+            newAccount.FirstName = userRegistration.FirstName;
+            newAccount.LastName = userRegistration.LastName;
+            newAccount.PhoneNumber = userRegistration.PhoneNumber;
             _classContext.Users.Add(newAccount);
             _classContext.SaveChanges();
 
