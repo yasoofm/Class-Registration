@@ -10,7 +10,7 @@ namespace ClassRegistrationBack.Model
        public DbSet<Booking> Bookings { get; set; }
        public DbSet<Instructor> Instructors { get; set; }
        public DbSet<Section> Sections { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserAccount> Users { get; set; }
 
         public ClassContext(DbContextOptions<ClassContext> options) : base(options) { }
 
