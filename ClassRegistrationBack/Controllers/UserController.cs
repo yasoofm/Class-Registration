@@ -32,7 +32,7 @@ namespace ClassRegistrationBack.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public ActionResult<IEnumerable<Gym>> Gyms()
         {
             var gyms = _context.Gyms;
@@ -44,13 +44,13 @@ namespace ClassRegistrationBack.Controllers
             return Ok(gyms);
         }
 
-        [HttpGet]
+        [HttpGet("/sections")]
         public IEnumerable<Section> GetAll()
         {
             return _context.Sections;
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public IActionResult Book(int userId, int sectionId)
         {
             var user = _context.Users.Find(userId);
@@ -100,7 +100,7 @@ namespace ClassRegistrationBack.Controllers
             }
         }
 
-        [HttpDelete("delete-booking/{id}")]
+        [HttpDelete("[action]/{id}")]
         public IActionResult DeleteBooking(int id)
         {
             var booking = _context.Bookings.Find(id);

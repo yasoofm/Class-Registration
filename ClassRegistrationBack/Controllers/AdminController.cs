@@ -50,13 +50,19 @@ namespace ClassRegistrationBack.Controllers
 
 
 
-        [HttpPost("add-section")]
+        [HttpPost("add-section/{id}")]
         [ProducesResponseType(typeof(IActionResult), 201)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult AddSection(AddSectionRequest addSectionRequest)
+        public IActionResult AddSection(AddSectionRequest addSectionRequest, int id)
         {
             try
             {
+                var gym = _context.Gyms.Find(id);
+                if (gym == null)
+                {
+                    return NotFound();
+                }
+
                 var section = new Section()
                 {
                     Instructor = new Instructor
@@ -69,12 +75,12 @@ namespace ClassRegistrationBack.Controllers
                     Duration = addSectionRequest.Duration,
                     Time = addSectionRequest.Time,
                     SectionType = addSectionRequest.SectionType,
-                    Capacity = addSectionRequest.Capacity
-                    
+                    Capacity = addSectionRequest.Capacity,
+                    Gym = gym
                 };
                 _context.Sections.Add(section);
                 _context.SaveChanges();
-                return Created(nameof(AddGym), new { Id = section.Id });
+                return Created(nameof(AddSection), new { Id = section.Id });
             }
             catch (Exception ex)
             {
@@ -127,7 +133,7 @@ namespace ClassRegistrationBack.Controllers
         }
 
 
-        [HttpGet("get-sections")]
+        [HttpGet("get-sections/{id}")]
         [ProducesResponseType(typeof(IActionResult), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -135,7 +141,7 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                return _context.Sections.Where(x => x.Id == id).Select(p => new SectionResponse
+                return _context.Sections.Where(x => x.Gym.Id == id).Select(p => new SectionResponse
                 {
                     Id = p.Id,
                     Time = p.Time,
@@ -154,7 +160,7 @@ namespace ClassRegistrationBack.Controllers
         }
 
 
-        [HttpGet("get-instructor")]
+        [HttpGet("get-instructors")]
         [ProducesResponseType(typeof(IActionResult), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
