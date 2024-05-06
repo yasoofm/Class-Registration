@@ -21,11 +21,18 @@
 </EditForm>
 
 @code {
+    [CascadingParameter] GlobalAppState State { get; set; }
     RegisterRequest model = new RegisterRequest();
-    bool success;
 
-    public void OnValidSubmit()
+    public async Task OnValidSubmit()
     {
-        success = true;
+        try
+        {
+            var http = State.CreateClient();
+            var response = await http.PostAsJsonAsync("/Admin/Register", model);
+        } catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
 }

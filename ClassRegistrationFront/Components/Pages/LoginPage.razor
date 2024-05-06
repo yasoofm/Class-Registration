@@ -21,34 +21,47 @@
 
 
 @code {
-    LoginRequest model = new LoginRequest();
-    bool success;
+        [CascadingParameter] public GlobalAppState State { get; set; }
 
-    // public class RegisterAccountForm
-    // {
-    //     [Required]
-    //     [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
-    //     public string Username { get; set; }
+        LoginRequest model = new LoginRequest();
 
-    //     [Required]
-    //     [EmailAddress]
-    //     public string Email { get; set; }
 
-    //     [Required]
-    //     [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
-    //     public string Password { get; set; }
+        // public class RegisterAccountForm
+        // {
+        //     [Required]
+        //     [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
+        //     public string Username { get; set; }
 
-    //     [Required]
-    //     [Compare(nameof(Password))]
-    //     public string Password2 { get; set; }
+        //     [Required]
+        //     [EmailAddress]
+        //     public string Email { get; set; }
+
+        //     [Required]
+        //     [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
+        //     public string Password { get; set; }
+
+        //     [Required]
+        //     [Compare(nameof(Password))]
+        //     public string Password2 { get; set; }
 
     // }
 
 
-    private void OnValidSubmit(EditContext context)
-    {
-
-        success = true;
+        private async Task OnValidSubmit(EditContext context)
+        {
+            try
+            {
+                var http = State.CreateClient();
+                var response = await http.PostAsJsonAsync("/Auth/login", model);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
+                    State.SaveToken(result.Token);
+                }            
+        } catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
     
 }

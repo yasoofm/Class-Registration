@@ -17,7 +17,7 @@
 
 @code {
     public List<GymResponse> gyms { get; set; } = [];
-    HttpClient http = new HttpClient();
+    [CascadingParameter] GlobalAppState State { get; set; }
 
     protected override void OnInitialized()
     {
@@ -35,7 +35,8 @@
     {
         try
         {
-            var response = await http.GetAsync("https://localhost:7288/Admin/get-gyms");
+            var http = State.CreateClient();
+            var response = await http.GetAsync("/Admin/get-gyms");
 
             if (response.IsSuccessStatusCode)
             {

@@ -1,0 +1,33 @@
+﻿<MudPaper Class="pa-4">
+    <MudStack Style="padding-left: 0px; padding-right: 0px;" Spacing="2">
+        <MudButton Style="color: white; height: 100px; background-image: url(https://images.squarespace-cdn.com/content/v1/628c0b6d5d2e1e3ca6023ce5/6382429b-b502-4859-9b9b-ba77f609a252/Header+Image+Gym.jpg)" OnClick="OnExpandCollapseClick">@Item.SectionType</MudButton>
+        <MudDivider />
+        <MudCollapse Expanded="_expanded">
+            <MudStack Row=true Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                <MudContainer Style="padding-left: 0;">
+                    <MudText Style="justify-content: center;"><MudIcon Icon="@Icons.Material.Filled.FitnessCenter" /> @Item.Instructor.FirstName @Item.Instructor.LastName</MudText>
+                    <MudText><MudIcon Icon="@Icons.Material.Filled.Timer" /> @Item.Duration.Hour:@Item.Duration.Minute</MudText>
+                    <MudText><MudIcon Icon="@Icons.Material.Filled.AccessTime" /> @Item.Time</MudText>
+                </MudContainer>
+                <MudButton OnClick="OnBookClick" Variant="Variant.Outlined">Book</MudButton>
+            </MudStack>
+        </MudCollapse>
+    </MudStack>
+</MudPaper>
+@code {
+    [Parameter] public SectionResponse Item { get; set; }
+    [CascadingParameter] public GlobalAppState State { get; set; }
+
+    HttpClient http = new HttpClient();
+    bool _expanded = false;
+
+    private void OnExpandCollapseClick()
+    {
+        _expanded = !_expanded;
+    }
+
+    private async Task OnBookClick()
+    {
+        //await http.PostAsync($"https://localhost:7288/User/Book?userId={State.UserId}&");
+    }
+}
