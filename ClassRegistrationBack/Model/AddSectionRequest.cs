@@ -6,6 +6,6 @@
         public DateTime Time { get; set; }
         public string SectionType { get; set; }
         public int Capacity { get; set; }
-        public InstructorResponse? Instructor { get; set; }
+        public AddInstructorRequest Instructor { get; set; }
     }
 }
