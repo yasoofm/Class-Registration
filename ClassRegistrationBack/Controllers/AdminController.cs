@@ -421,7 +421,10 @@ namespace ClassRegistrationBack.Controllers
                 section.Capacity = request.Capacity;
                 section.Instructor = new Instructor()
                 {
-                    
+                    FirstName = request.Instructor.FirstName,
+                    LastName = request.Instructor.LastName,
+                    Description = request.Instructor.Description,
+                    PhoneNumber = request.Instructor.PhoneNumber
                 };
                 section.Duration = request.Duration;
                 _context.SaveChanges();
