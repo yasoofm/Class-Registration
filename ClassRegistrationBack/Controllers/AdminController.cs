@@ -333,7 +333,100 @@ namespace ClassRegistrationBack.Controllers
             }
         }
 
+
+        [HttpPatch("edit-gym/{id}")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult EditGym(int id, AddGymRequset request)
+        {
+
+            try
+            {
+                var gym = _context.Gyms.Find(id);
+                if (gym == null)
+                {
+                    return NotFound();
+                }
+                gym.Name = request.Name;
+                gym.Address = new Address()
+                {
+                    BuildingNumber = request.Address.BuildingNumber,
+                    Avenue = request.Address.Avenue,
+                    Street = request.Address.Street,
+                    Area = request.Address.Area,
+                    Block = request.Address.Block
+                };
+                _context.SaveChanges();
+
+                return Created(nameof(EditGym), new { id = gym.Id });
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+        }
+
+
+
+        [HttpPatch("edit-instructor/{id}")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult EditInstructor(int id, AddInstructorRequest request)
+        {
+
+            try
+            {
+                var instructor = _context.Instructors.Find(id);
+                if (instructor == null)
+                {
+                    return NotFound();
+                }
+                instructor.PhoneNumber = request.PhoneNumber;
+                instructor.FirstName = request.FirstName;
+                instructor.LastName = request.LastName;
+                _context.SaveChanges();
+
+                return Created(nameof(EditInstructor), new { id = instructor.Id });
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+        }
+
+        [HttpPatch("edit-section/{id}")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult EditSection(int id, AddSectionRequest request)
+        {
+
+            try
+            {
+                var section = _context.Sections.Find(id);
+                if (section == null)
+                {
+                    return NotFound();
+                }
+                section.Capacity = request.Capacity;
+                section.Instructor = new Instructor()
+                {
+                    
+                };
+                section.Duration = request.Duration;
+                _context.SaveChanges();
+
+                return Created(nameof(EditSection), new { id = section.Id });
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+        }
     }
 }
-
-    //   editgym - editinstructor - editsection
