@@ -16,7 +16,6 @@ namespace ClassRegistrationFront.Models.Requests
         [EmailAddress]
         public string Email { get; set; }
         [Required]
-        [Phone]
         public int? PhoneNumber { get; set; }
     }
 }

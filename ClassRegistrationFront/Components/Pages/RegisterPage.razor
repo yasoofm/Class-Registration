@@ -8,7 +8,7 @@
         <MudCardContent>
             <MudTextField Label="First Name" @bind-Value="model.FirstName" For="(() => model.FirstName)" Required />
             <MudTextField Label="Last Name" @bind-Value="model.LastName" For="(() => model.LastName)" Required />
-            <MudTextField Label="Phone Number" @bind-Value="model.PhoneNumber" For="(() => model.PhoneNumber)" InputType="InputType.Telephone" Required />
+            <MudTextField Label="Phone Number" @bind-Value="model.PhoneNumber" For="(() => model.PhoneNumber)" Required />
             <MudTextField Label="Email" @bind-Value="model.Email" For="(() => model.Email)" InputType="InputType.Email" Required />
             <MudTextField Label="Username" @bind-Value="model.Username" For="(() => model.Username)" Required />
             <MudTextField Label="Password" @bind-Value="model.Password" For="(() => model.Password)" InputType="InputType.Password" Required />          
@@ -22,14 +22,21 @@
 
 @code {
     [CascadingParameter] GlobalAppState State { get; set; }
+    [Inject] NavigationManager manager { get; set; }
+
     RegisterRequest model = new RegisterRequest();
 
     public async Task OnValidSubmit()
     {
+        Console.WriteLine("clicked");
         try
         {
             var http = State.CreateClient();
-            var response = await http.PostAsJsonAsync("/Admin/Register", model);
+            var response = await http.PostAsJsonAsync("/Auth/Register", model);
+            if (response.IsSuccessStatusCode)
+            {
+                manager.NavigateTo("/Login");
+            }
         } catch (HttpRequestException ex)
         {
             Console.WriteLine(ex);
