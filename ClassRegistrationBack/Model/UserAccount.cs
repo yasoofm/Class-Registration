@@ -1,6 +1,6 @@
 ﻿namespace ClassRegistrationBack.Model
 {
-    public class User
+    public class UserAccount
     {
        
             public int Id { get; set; }
@@ -13,10 +13,10 @@
             public bool IsAdmin { get; set; }
             public List<Booking> Bookings {get; set;}
 
-            private User() { }
-            public static User Create(string username, string password, bool isAdmin = false)
+            private UserAccount() { }
+            public static UserAccount Create(string username, string password, bool isAdmin = false)
             {
-                return new User
+                return new UserAccount
                 {
                     UserName = username,
                     Password = BCrypt.Net.BCrypt.EnhancedHashPassword(password),
@@ -39,4 +39,6 @@
         public int PhoneNumber { get; set; }
         public List<BookingResponse> Bookings { get; set; }
     }
+
+
 }
