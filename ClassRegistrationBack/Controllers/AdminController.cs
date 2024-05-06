@@ -141,14 +141,21 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                return _context.Sections.Where(x => x.Gym.Id == id).Select(p => new SectionResponse
+                return _context.Sections.Where(x => x.Gym.Id == id).Include(p => p.Instructor).Select(p => new SectionResponse
                 {
                     Id = p.Id,
                     Time = p.Time,
                     Duration = p.Duration,
                     SectionType = p.SectionType,
-                    Capacity = p.Capacity
-
+                    Capacity = p.Capacity,
+                    Instructor = new InstructorResponse 
+                    { 
+                        Id = p.Instructor.Id,
+                        FirstName = p.Instructor.FirstName,
+                        LastName = p.Instructor.LastName,
+                        Description = p.Instructor.Description,
+                        PhoneNumber = p.Instructor.PhoneNumber,
+                    }
                 })
                 .ToList();
 
