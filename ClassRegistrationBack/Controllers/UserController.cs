@@ -85,9 +85,21 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpGet("Bookings/{id}")]
-        public IEnumerable<Booking> GetBooking(int id)
+        public IEnumerable<BookingResponse> GetBookings(int id)
         {
-            return _context.Bookings.Where(x => x.User.Id == id);
+            return _context.Bookings.Where(x => x.User.Id == id).Include(x => x.Section).Select(x => new BookingResponse
+            {
+                CreateAt = x.CreateAt,
+                Id = x.Id,
+                Section = new SectionResponse
+                {
+                    Id = x.Section.Id,
+                    Duration = x.Section.Duration,
+                    Time = x.Section.Time,
+                    SectionType = x.Section.SectionType,
+                    Capacity = x.Section.Capacity,
+                }
+            });
         }
 
         [HttpGet("[action]")]
