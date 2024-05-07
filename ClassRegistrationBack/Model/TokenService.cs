@@ -38,10 +38,10 @@ namespace ClassRegistrationBack.Model
 
                 var claims = new[]
                 {
-        new Claim(TokenClaimsConstant.Username, username),
-        new Claim(TokenClaimsConstant.UserId, userAccount.Id.ToString()),
-        new Claim(ClaimTypes.Role, userAccount.IsAdmin ? "Admin" : "User")
-        };
+                    new Claim(TokenClaimsConstant.Username, username),
+                    new Claim(TokenClaimsConstant.UserId, userAccount.Id.ToString()),
+                    new Claim(ClaimTypes.Role, userAccount.IsAdmin ? "Admin" : "User")
+                };
 
                 var token = new JwtSecurityToken(
                     issuer: _configuration["Jwt:Issuer"],

@@ -1,7 +1,9 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @page "/Login"
-<EditForm Model="@model" OnValidSubmit="OnValidSubmit" >
-    <DataAnnotationsValidator />           
+<PageTitle>Login</PageTitle>
+<div style="height: 100vh;">
+    <EditForm Model="@model" OnValidSubmit="OnValidSubmit" >
+        <DataAnnotationsValidator />           
             <MudCard >
                 <MudCardHeader>
                     <MudText>Login</MudText>
@@ -21,8 +23,8 @@
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" Style="object-position: center">Login</MudButton>
                 </MudCardActions>
             </MudCard>          
-</EditForm>
-
+    </EditForm>
+</div>
 
 @code {
     [CascadingParameter] public GlobalAppState State { get; set; }

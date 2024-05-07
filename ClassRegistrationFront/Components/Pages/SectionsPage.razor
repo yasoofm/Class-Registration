@@ -1,13 +1,15 @@
 ﻿@page "/gyms/{Id:int}"
-<h3>SectionsPage @Id</h3>
+<PageTitle>Sections</PageTitle>
+<div style="height: 100vh;">
+    <h3>SectionsPage @Id</h3>
 
-<MudStack>
-    @foreach(var item in sections)
-    {      
-        <Collapse Item="item" />
-    }
-</MudStack>
-
+    <MudStack>
+        @foreach(var item in sections)
+        {      
+            <Collapse Item="item" />
+        }
+    </MudStack>
+</div>
 
 @code {
     [Parameter] public int Id { get; set; }

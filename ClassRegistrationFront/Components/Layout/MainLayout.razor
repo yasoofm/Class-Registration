@@ -3,8 +3,8 @@
 <div class="page">
 
     <main>
-        <MudAppBar Color="Color.Primary" Fixed="false">
-            <MudIconButton Icon="@Icons.Material.Rounded.Person" Color="Color.Inherit" Edge="Edge.Start" />
+        <MudAppBar Color="Color.Info" Fixed="false">
+            <MudIconButton Icon="@Icons.Material.Rounded.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
             <MudSpacer />
             @if (State.IsLoggedIn)
             {
@@ -15,9 +15,23 @@
             }           
         </MudAppBar>
 
-        <article class="content px-4">
-            @Body
-        </article>
+        <MudDrawerContainer Class="mud-height-full">
+            <MudDrawer @bind-Open="@open" Elevation="0" Variant="@DrawerVariant.Persistent" Color="Color.Info">
+                <MudDrawerHeader>
+                    <MudText Typo="Typo.h6">My App</MudText>
+                </MudDrawerHeader>
+                <MudNavMenu Color="Color.Secondary">
+                    <MudNavLink Href="/Gyms" Icon="@Icons.Material.Filled.Home" IconColor="Color.Inherit">Gyms</MudNavLink>
+                    <MudNavLink Href="/Bookings" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.History" IconColor="Color.Inherit">Bookings</MudNavLink>
+                    <MudNavLink Href="/Profile" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person" IconColor="Color.Inherit">Profile</MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
+                <div>
+                    <article class="content px-4">
+                        @Body
+                    </article>
+                </div>
+        </MudDrawerContainer>
     </main>
 </div>
 
@@ -51,5 +65,12 @@
     public void OnProfileClick()
     {
         manager.NavigateTo("/Profile");
+    }
+
+    bool open = false;
+
+    void ToggleDrawer()
+    {
+        open = !open;
     }
 }

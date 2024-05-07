@@ -20,7 +20,7 @@ namespace ClassRegistrationFront.Models
             //var claimsIdentity = new ClaimsIdentity(jwtSecurityToken.Claims,
             //    CookieAuthenticationDefaults.AuthenticationScheme);
             Username = jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == "username")?.Value ?? "";
-            UserId = int.Parse(jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == "yousefmubarak.id")?.Value ?? "0");
+            UserId = int.Parse(jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == "yousefmubarak.Id")?.Value ?? "0");
             Token = token;
         }
 
@@ -32,7 +32,7 @@ namespace ClassRegistrationFront.Models
         public HttpClient CreateClient()
         {
             var client = new HttpClient();
-            if(Token != "")
+            if(Token != "" || Token != null)
             {
                 client.DefaultRequestHeaders.Authorization =
                           new AuthenticationHeaderValue("Bearer", Token);

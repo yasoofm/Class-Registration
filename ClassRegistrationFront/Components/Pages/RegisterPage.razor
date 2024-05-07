@@ -1,25 +1,27 @@
 ﻿@page "/Register"
-<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
-    <MudCard>
-        <MudCardHeader>
-            <MudText>Register</MudText>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudTextField Label="First Name" @bind-Value="model.FirstName" For="(() => model.FirstName)" Required />
-            <MudTextField Label="Last Name" @bind-Value="model.LastName" For="(() => model.LastName)" Required />
-            <MudTextField Label="Phone Number" @bind-Value="model.PhoneNumber" For="(() => model.PhoneNumber)" Required />
-            <MudTextField Label="Email" @bind-Value="model.Email" For="(() => model.Email)" InputType="InputType.Email" Required />
-            <MudTextField Label="Username" @bind-Value="model.Username" For="(() => model.Username)" Required />
-            <MudTextField Label="Password" @bind-Value="model.Password" For="(() => model.Password)" InputType="InputType.Password" Required />          
-        </MudCardContent>
-        <MudCardActions>
-            <MudText>Already registered? </MudText><MudLink Underline="Underline.Always" Href="/Login" Style="margin-left: 5px;">Login</MudLink>
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" Style="object-position: center">Register</MudButton>
-        </MudCardActions>
-    </MudCard>
-</EditForm>
-
+<PageTitle>Register</PageTitle>
+<div style="height: 100vh">
+    <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <MudCard>
+            <MudCardHeader>
+                <MudText>Register</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField Label="First Name" @bind-Value="model.FirstName" For="(() => model.FirstName)" Required />
+                <MudTextField Label="Last Name" @bind-Value="model.LastName" For="(() => model.LastName)" Required />
+                <MudTextField Label="Phone Number" @bind-Value="model.PhoneNumber" For="(() => model.PhoneNumber)" Required />
+                <MudTextField Label="Email" @bind-Value="model.Email" For="(() => model.Email)" InputType="InputType.Email" Required />
+                <MudTextField Label="Username" @bind-Value="model.Username" For="(() => model.Username)" Required />
+                <MudTextField Label="Password" @bind-Value="model.Password" For="(() => model.Password)" InputType="InputType.Password" Required />          
+            </MudCardContent>
+            <MudCardActions>
+                <MudText>Already registered? </MudText><MudLink Underline="Underline.Always" Href="/Login" Style="margin-left: 5px;">Login</MudLink>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" Style="object-position: center">Register</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </EditForm>
+</div>
 @code {
     [CascadingParameter] GlobalAppState State { get; set; }
     [Inject] NavigationManager manager { get; set; }

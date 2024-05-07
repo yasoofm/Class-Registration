@@ -9,7 +9,13 @@
                     <MudText><MudIcon Icon="@Icons.Material.Filled.Timer" /> @Item.Duration.Hour:@Item.Duration.Minute</MudText>
                     <MudText><MudIcon Icon="@Icons.Material.Filled.AccessTime" /> @Item.Time</MudText>
                 </MudContainer>
-                <MudButton OnClick="OnBookClick" Variant="Variant.Outlined">Book</MudButton>
+                <MudContainer Style="width: 80px; padding-right: 0; padding-left: 0;">
+                    <MudButton OnClick="OnBookClick" Variant="Variant.Outlined">Book</MudButton>
+                    @if (_loading)
+                    {
+                        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                    }
+                </MudContainer>               
             </MudStack>
         </MudCollapse>
     </MudStack>
@@ -17,8 +23,10 @@
 @code {
     [Parameter] public SectionResponse Item { get; set; }
     [CascadingParameter] public GlobalAppState State { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
 
     bool _expanded = false;
+    bool _loading = false;
 
     private void OnExpandCollapseClick()
     {
@@ -29,8 +37,19 @@
     {
         try
         {
+            _loading = true;
             var http = State.CreateClient();
-            var response = await http.PostAsync($"/User/Book?userId={State.UserId}&sectionId{Item.Id}", null);
+            var response = await http.PostAsync($"/User/Book?userId={State.UserId}&sectionId={Item.Id}", null);
+            var result = response.Content.ReadAsStringAsync();
+            _loading = false;
+
+            if (response.IsSuccessStatusCode)
+            {
+                Snackbar.Add("Booking Successfull", Severity.Success);
+            } else
+            {
+                Snackbar.Add("Booking Failed", Severity.Error);
+            }
         } catch (HttpRequestException ex)
         {
             Console.WriteLine(ex);
