@@ -1,6 +1,7 @@
 ﻿using ClassRegistrationBack.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static ClassRegistrationBack.Model.EditProfile;
 
 namespace ClassRegistrationBack.Controllers
 {
@@ -48,6 +49,49 @@ namespace ClassRegistrationBack.Controllers
         public IEnumerable<Section> GetAll()
         {
             return _context.Sections;
+        }
+
+       
+
+        [HttpGet("[action]/{id}")]
+        public ActionResult<UserAccount> GetProfile(int id)
+        {
+            return _context.Users.Find(id);
+        }
+
+        [HttpPatch("[action]")]
+        public IActionResult EditProfile(int id, EditProfileResponse request)
+        {
+            var profile = _context.Users.Find(id);
+            if(request.FirstName != null)
+            {
+                profile.FirstName = request.FirstName;
+            }
+
+            if (request.LastName != null)
+            {
+                profile.LastName = request.LastName;
+            }
+
+            if (request.UserName != null)
+            {
+                profile.UserName = request.UserName;
+            }
+
+            if (request.PhoneNumber != null)
+            {
+                profile.PhoneNumber = (int)request.PhoneNumber;
+            }
+
+            if (request.Email != null)
+            {
+                profile.Email = request.Email;
+            }
+
+
+            _context.SaveChanges();
+
+            return Created();
         }
 
         [HttpPost("[action]")]
