@@ -1,29 +1,55 @@
 ﻿@page "/Profile"
 <PageTitle>Profile</PageTitle>
 <div style="height: 100vh;">
-    <h3>Welcome @user.FirstName @user.LastName</h3>
-    <MudPaper Class="pa-16 ma-2">
+    <h3>Welcome @firstName @lastName</h3>
+    <MudPaper Class="pa-16 ma-2" Style="padding-top: 0 !important; padding-right: 0 !important;">
         <MudStack>
-            <MudText></MudText>
+            <MudStack Row="true" Justify="Justify.FlexEnd">
+                <MudIconButton Icon="@Icons.Material.Rounded.Edit" OnClick="OpenDialog"></MudIconButton>
+            </MudStack>
+            <MudText>Email: @email</MudText>
+            <MudText>Phone Number: @phoneNumber</MudText>
+            <MudText>Username: @username</MudText>
         </MudStack>
     </MudPaper>
 </div>
 
 
 
-    @code {
+@code {
+    [Inject] public IDialogService DialogService { get; set; }
     [CascadingParameter] GlobalAppState State { get; set; }
     public UserResponse user { get; set; }
+    public string firstName = "";
+    public string lastName = "";
+    public string email = "";
+    public string phoneNumber = "";
+    public string username = "";
 
     protected async override Task OnInitializedAsync()
     {
         try
         {
             var http = State.CreateClient();
-            user = await http.GetFromJsonAsync<UserResponse>("");
+            user = await http.GetFromJsonAsync<UserResponse>($"/User/GetProfile/{State.UserId}");
+            firstName = user.FirstName;
+            lastName = user.LastName;
+            email = user.Email;
+            phoneNumber = user.PhoneNumber.ToString();
+            username = user.Username;
         } catch(HttpRequestException ex)
         {
             Console.WriteLine(ex);
         }
+    }
+    // var http = State.CreateClient();
+    // var editedUser = new EditUserRequest();
+
+
+    private void OpenDialog()
+    {
+        DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
+
+        DialogService.Show<Dialog>("Edit Profile", closeOnEscapeKey);
     }
 }

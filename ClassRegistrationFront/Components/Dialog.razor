@@ -1,0 +1,38 @@
+﻿<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+        <MudDialog>
+            <DialogContent>
+                <MudTextField Label="First Name" @bind-Value="model.FirstName" For="(() => model.FirstName)" />
+                <MudTextField Label="Last Name" @bind-Value="model.LastName" For="(() => model.LastName)" />
+                <MudTextField Label="Phone Number" @bind-Value="model.PhoneNumber" For="(() => model.PhoneNumber)" />
+                <MudTextField Label="Email" @bind-Value="model.Email" For="(() => model.Email)" InputType="InputType.Email" />
+                <MudTextField Label="Username" @bind-Value="model.Username" For="(() => model.Username)" />
+                <MudTextField Label="Password" @bind-Value="model.Password" For="(() => model.Password)" InputType="InputType.Password" />
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="Cancel">Cancel</MudButton>
+                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Ok</MudButton>
+            </DialogActions>
+        </MudDialog>
+</EditForm>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] GlobalAppState State { get; set; }
+    public EditUserRequest model = new EditUserRequest();
+
+
+    void Cancel() => MudDialog.Cancel();
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    public async Task OnValidSubmit()
+    {
+        try
+        {
+            var http = State.CreateClient();
+            var response = await http.PatchAsJsonAsync("", model);
+            Submit();
+        } catch(HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+}
