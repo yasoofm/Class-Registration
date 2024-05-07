@@ -60,7 +60,7 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpPatch("[action]")]
-        public IActionResult EditProfile(int id, EditProfileResponse request)
+        public IActionResult EditProfile(int id, EditProfileRequest request)
         {
             var profile = _context.Users.Find(id);
             if(request.FirstName != null)
