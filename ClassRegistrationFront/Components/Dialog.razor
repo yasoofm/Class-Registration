@@ -22,15 +22,20 @@
 
 
     void Cancel() => MudDialog.Cancel();
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Submit() => MudDialog.Close(() => 
+    {
+        DialogResult.Ok(true);      
+    });
+
     public async Task OnValidSubmit()
     {
         try
         {
             var http = State.CreateClient();
-            var response = await http.PatchAsJsonAsync("", model);
+            var response = await http.PatchAsJsonAsync($"/User/EditProfile?id={State.UserId}", model);
             Submit();
-        } catch(HttpRequestException ex)
+        }
+        catch (HttpRequestException ex)
         {
             Console.WriteLine(ex);
         }
