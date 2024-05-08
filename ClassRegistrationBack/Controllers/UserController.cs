@@ -88,6 +88,10 @@ namespace ClassRegistrationBack.Controllers
                 profile.Email = request.Email;
             }
 
+            if(request.Password != null)
+            {
+                profile.Password = request.Password;
+            }
 
             _context.SaveChanges();
 

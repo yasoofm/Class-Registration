@@ -46,10 +46,17 @@
     // var editedUser = new EditUserRequest();
 
 
-    private void OpenDialog()
+
+
+    private async Task OpenDialog()
     {
         DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
 
-        DialogService.Show<Dialog>("Edit Profile", closeOnEscapeKey);
+        var dialog = await DialogService.ShowAsync<Dialog>("Edit Profile", closeOnEscapeKey);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            await OnInitializedAsync();
+        }
     }
 }
