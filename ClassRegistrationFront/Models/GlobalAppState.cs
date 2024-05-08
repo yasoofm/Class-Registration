@@ -10,7 +10,8 @@ namespace ClassRegistrationFront.Models
         public string Token { get; set; }
         public string Username { get; set; }
         public int UserId { get; set; }
-        public bool IsLoggedIn { get; set; } = false;
+        public bool IsLoggedIn  => Token != null && Token != "";
+        public bool IsAdmin { get; set; } = false;
 
         public void SaveToken(string token)
         {
@@ -21,12 +22,17 @@ namespace ClassRegistrationFront.Models
             //    CookieAuthenticationDefaults.AuthenticationScheme);
             Username = jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == "username")?.Value ?? "";
             UserId = int.Parse(jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == "yousefmubarak.Id")?.Value ?? "0");
+            if (jwtSecurityToken.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Role)?.Value == "Admin")
+            {
+                IsAdmin = true;
+            }
             Token = token;
         }
 
         public void RemoveToken()
         {
             Token = "";
+            IsAdmin = false;
         }
 
         public HttpClient CreateClient()

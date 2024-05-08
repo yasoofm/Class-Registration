@@ -1,18 +1,28 @@
 ﻿@page "/Profile"
 <PageTitle>Profile</PageTitle>
-<div style="height: 100vh;">
-    <h3>Welcome @firstName @lastName</h3>
-    <MudPaper Class="pa-16 ma-2" Style="padding-top: 0 !important; padding-right: 0 !important;">
-        <MudStack>
-            <MudStack Row="true" Justify="Justify.FlexEnd">
-                <MudIconButton Icon="@Icons.Material.Rounded.Edit" OnClick="OpenDialog"></MudIconButton>
+
+@if (!State.IsLoggedIn)
+{
+    <div style="height: 100vh;">
+        <h3>Not Logged In</h3>
+    </div>
+} else
+{
+    <div style="height: 100vh;">
+        <h3>Welcome @firstName @lastName</h3>
+        <MudPaper Class="pa-16 ma-2" Style="padding-top: 0 !important; padding-right: 0 !important;">
+            <MudStack>
+                <MudStack Row="true" Justify="Justify.FlexEnd">
+                    <MudIconButton Icon="@Icons.Material.Rounded.Edit" OnClick="OpenDialog"></MudIconButton>
+                </MudStack>
+                <MudText>Email: @email</MudText>
+                <MudText>Phone Number: @phoneNumber</MudText>
+                <MudText>Username: @username</MudText>
             </MudStack>
-            <MudText>Email: @email</MudText>
-            <MudText>Phone Number: @phoneNumber</MudText>
-            <MudText>Username: @username</MudText>
-        </MudStack>
-    </MudPaper>
-</div>
+        </MudPaper>
+    </div>
+}
+
 
 
 
@@ -28,18 +38,22 @@
 
     protected async override Task OnInitializedAsync()
     {
-        try
+        if (State.IsLoggedIn)
         {
-            var http = State.CreateClient();
-            user = await http.GetFromJsonAsync<UserResponse>($"/User/GetProfile/{State.UserId}");
-            firstName = user.FirstName;
-            lastName = user.LastName;
-            email = user.Email;
-            phoneNumber = user.PhoneNumber.ToString();
-            username = user.Username;
-        } catch(HttpRequestException ex)
-        {
-            Console.WriteLine(ex);
+            try
+            {
+                var http = State.CreateClient();
+                user = await http.GetFromJsonAsync<UserResponse>($"/User/GetProfile/{State.UserId}");
+                firstName = user.FirstName;
+                lastName = user.LastName;
+                email = user.Email;
+                phoneNumber = user.PhoneNumber.ToString();
+                username = user.Username;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
     // var http = State.CreateClient();

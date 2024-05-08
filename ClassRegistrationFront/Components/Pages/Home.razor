@@ -1,7 +1,55 @@
 ﻿@page "/"
+<PageTitle>Gyms</PageTitle>
+<h3>GymsPage</h3>
+<MudStack AlignItems="AlignItems.Center">
+    @foreach (var gym in gyms)
+    {
+        <MudCard Style="width: 800px;">
+            <MudCardMedia Image="https://lh3.googleusercontent.com/p/AF1QipOwgshDpo2SaKr3GaWZjFnynF3mpWIINxn4hOMe=s1360-w1360-h1020" Height=550 />
+            <MudCardContent>
+                <MudLink Href=@("/gyms/" + gym.Id)>@gym.Name</MudLink>
+            </MudCardContent>
+        </MudCard>
+    }
+</MudStack>
 
-<PageTitle>Home</PageTitle>
+@code {
+    public List<GymResponse> gyms { get; set; } = [];
+    [CascadingParameter] GlobalAppState State { get; set; }
 
-<h1>Hello, world!</h1>
+    protected override void OnInitialized()
+    {
 
-Welcome to your new app.
+        // gyms = [
+        //     new GymResponse{ Id = 1, Address = new AddressResponse(), Name = "branch 1" },
+        //     new GymResponse{ Id = 2, Address = new AddressResponse(), Name = "branch 2" },
+        //     new GymResponse{ Id = 3, Address = new AddressResponse(), Name = "branch 3" },
+        //     new GymResponse{ Id = 4, Address = new AddressResponse(), Name = "branch 4" },
+        // ];
+        base.OnInitialized();
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            var http = State.CreateClient();
+            var response = await http.GetAsync("/Admin/get-gyms");
+
+            if (response.IsSuccessStatusCode)
+            {
+                gyms = await response.Content.ReadFromJsonAsync<List<GymResponse>>();
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+
+
+        // var id = 5;
+        // gyms = await http.GetFromJsonAsync<>($"https://localhost:7288/Admin/gyms/?hee={id}");
+        // var response = http.PostAsJsonAsync("", );
+    }
+}
