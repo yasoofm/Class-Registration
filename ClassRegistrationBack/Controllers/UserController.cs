@@ -19,6 +19,9 @@ namespace ClassRegistrationBack.Controllers
             _context = dbContext;
         }
         [HttpGet("[action]")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult InstructorDetails(int Id)
         {
         using (var context = _context)
@@ -34,32 +37,62 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpGet("[action]")]
-        public ActionResult<IEnumerable<Gym>> Gyms()
+        [ProducesResponseType(typeof(ActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<IEnumerable<GymResponse>> Gyms()
         {
-            var gyms = _context.Gyms;
-
-            if (gyms == null)
+            return _context.Gyms.Select(p => new GymResponse() { Id = p.Id, Name = p.Name }).ToList();
+            
+        }
+        
+        [HttpGet("/sections/{id}")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<List<SectionResponse>> GetSections(int id)
+        {
+            try
             {
-                return NotFound();
+                return _context.Sections.Where(x => x.Gym.Id == id).Include(p => p.Instructor).Select(p => new SectionResponse
+                {
+                    Id = p.Id,
+                    Time = p.Time,
+                    Duration = p.Duration,
+                    SectionType = p.SectionType,
+                    Capacity = p.Capacity,
+                    Instructor = new InstructorResponse
+                    {
+                        Id = p.Instructor.Id,
+                        FirstName = p.Instructor.FirstName,
+                        LastName = p.Instructor.LastName,
+                        Description = p.Instructor.Description,
+                        PhoneNumber = p.Instructor.PhoneNumber,
+                    }
+                })
+                .ToList();
+
             }
-            return Ok(gyms);
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
-        [HttpGet("/sections")]
-        public IEnumerable<Section> GetAll()
-        {
-            return _context.Sections;
-        }
-
-       
 
         [HttpGet("[action]/{id}")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<UserAccount> GetProfile(int id)
         {
             return _context.Users.Find(id);
         }
 
         [HttpPatch("[action]")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult EditProfile(int id, EditProfileRequest request)
         {
             var profile = _context.Users.Find(id);
@@ -95,6 +128,9 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpPost("[action]")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Book(int userId, int sectionId)
         {
             var user = _context.Users.Find(userId);
@@ -129,6 +165,9 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpGet("Bookings/{id}")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IEnumerable<BookingResponse> GetBookings(int id)
         {
             return _context.Bookings.Where(x => x.User.Id == id).Include(x => x.Section).Select(x => new BookingResponse
@@ -147,6 +186,9 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpGet("[action]")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult AdressDetails(int Id)
         {
 
@@ -163,6 +205,9 @@ namespace ClassRegistrationBack.Controllers
         }
 
         [HttpDelete("[action]/{id}")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult DeleteBooking(int id)
         {
             var booking = _context.Bookings.Find(id);
