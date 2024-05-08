@@ -10,7 +10,7 @@
                     <MudText><MudIcon Icon="@Icons.Material.Filled.AccessTime" /> @Item.Time</MudText>
                 </MudContainer>
                 <MudContainer Style="width: 80px; padding-right: 0; padding-left: 0;">
-                    <MudButton OnClick="OnBookClick" Variant="Variant.Outlined">Book</MudButton>
+                    <MudButton @* Disabled="!State.IsLoggedIn" *@ OnClick="OnBookClick" Variant="Variant.Outlined">Book</MudButton>
                     @if (_loading)
                     {
                         <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
@@ -48,7 +48,7 @@
                 Snackbar.Add("Booking Successfull", Severity.Success);
             } else
             {
-                Snackbar.Add("Booking Failed", Severity.Error);
+                Snackbar.Add(State.IsLoggedIn ? "Booking Failed" : "Not Logged In", Severity.Error);
             }
         } catch (HttpRequestException ex)
         {

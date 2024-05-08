@@ -70,8 +70,7 @@
             {
                 var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
                 State.SaveToken(result.Token);
-                State.IsLoggedIn = true;
-                manager.NavigateTo("/Gyms");
+                manager.NavigateTo("/");
             } else
             {
                 IsShown = true;

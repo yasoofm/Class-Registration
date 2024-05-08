@@ -1,10 +1,54 @@
 ﻿@page "/Bookings"
 <PageTitle>Bookings</PageTitle>
-<div style="height: 100vh">
+<div style="@(Bookings.Count >= 3 ?  "" : "height: 100vh")">
     <h3>BookingsPage</h3>
+    <MudStack>
+        @foreach(var item in Bookings)
+        {
+            <MudCard>
+                <MudCardHeader>
+                    <MudText Style="font-weight: bold">@item.Section.SectionType</MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>Booked at: @item.CreateAt</MudText>
+                    <MudText>Booking date: @item.Section.Time</MudText>
+                    <MudText>Duration: @item.Section.Duration</MudText>                   
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@(() => OnCancelClick(item.Id))">Cancel</MudButton>
+                </MudCardActions>
+            </MudCard>
+        }       
+    </MudStack>
 </div>
 
 
 @code {
+    [CascadingParameter] GlobalAppState State { get; set; }
+    List<BookingResponse> Bookings = [];
 
+    protected async override Task OnInitializedAsync()
+    {
+        if (State.IsLoggedIn)
+        {
+            var http = State.CreateClient();
+            var response = await http.GetAsync($"/User/Bookings/{State.UserId}");
+            Console.WriteLine("updated");
+            Bookings = await response.Content.ReadFromJsonAsync<List<BookingResponse>>();
+        }
+    }
+
+    public async Task OnCancelClick(int id)
+    {
+        try
+        {
+            Console.WriteLine(id);
+            var http = State.CreateClient();
+            var response = await http.DeleteAsync($"/User/DeleteBooking/{id}");
+            await OnInitializedAsync();
+        } catch(HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
 }
