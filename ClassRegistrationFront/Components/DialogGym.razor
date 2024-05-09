@@ -1,0 +1,43 @@
+﻿<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <DialogContent>
+            <MudTextField Label="Name" @bind-Value="model.name" For="(() => model.name)" />
+            <MudTextField Label="Building" @bind-Value="model.address.buildingNumber" For="(() => model.address.buildingNumber)" Required/>
+            <MudTextField Label="Street" @bind-Value="model.address.street" For="(() => model.address.street)" Required/>
+            <MudTextField Label="Avenue" @bind-Value="model.address.avenue" For="(() => model.address.avenue)" />
+            <MudTextField Label="Block" @bind-Value="model.address.block" For="(() => model.address.block)" Required/>
+            <MudTextField Label="Area" @bind-Value="model.address.area" For="(() => model.address.area)" Required/>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Add</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] GlobalAppState State { get; set; }
+    public AddGymRequest model = new AddGymRequest();
+
+
+    void Cancel() => MudDialog.Cancel();
+    void Submit() => MudDialog.Close(() =>
+    {
+        DialogResult.Ok(true);
+    });
+
+    public async Task OnValidSubmit()
+    {
+        try
+        {
+            var http = State.CreateClient();
+            var response = await http.PostAsJsonAsync($"/Admin/add-gym", model);
+            Submit();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+}

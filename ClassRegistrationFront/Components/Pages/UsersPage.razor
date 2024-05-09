@@ -1,0 +1,43 @@
+﻿@page "/Users"
+
+<div style="@(Users.Count > 10 ?  "" : "height: 100vh")">
+    <h3>Users</h3>
+    <MudTable Items="Users" Hover="true" Breakpoint="Breakpoint.Sm" Loading="_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Username</MudTh>
+            <MudTh>Phone</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.FirstName @context.LastName</MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd DataLabel="Username">@context.Username</MudTd>
+            <MudTd DataLabel="Phone">@context.PhoneNumber</MudTd>
+        </RowTemplate>
+    </MudTable>
+</div>
+
+
+@code {
+    [CascadingParameter] GlobalAppState State { get; set; }
+    List<UserResponse> Users = [];
+    private bool _loading = false;
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            _loading = true;
+            var http = State.CreateClient();
+            Users = await http.GetFromJsonAsync<List<UserResponse>>("/Admin/get-users");
+            _loading = false;
+        } catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
+            
+    }
+}

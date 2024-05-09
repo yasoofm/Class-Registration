@@ -5,12 +5,31 @@
     <MudStack AlignItems="AlignItems.Center">
         @foreach (var gym in gyms)
         {
-            <MudCard Style="width: 800px;">
-                <MudCardMedia Image="https://lh3.googleusercontent.com/p/AF1QipOwgshDpo2SaKr3GaWZjFnynF3mpWIINxn4hOMe=s1360-w1360-h1020" Height=550 />
-                <MudCardContent>
-                    <MudLink Href=@("/gyms/" + gym.Id)>@gym.Name</MudLink>
-                </MudCardContent>
-            </MudCard>
+            if (State.IsAdmin)
+            {
+                <MudStack Row="true" Style="width: auto;" AlignItems="AlignItems.Center">
+                    <MudCard Style="width: 800px;">
+                        <MudCardMedia Image="https://lh3.googleusercontent.com/p/AF1QipOwgshDpo2SaKr3GaWZjFnynF3mpWIINxn4hOMe=s1360-w1360-h1020" Height=550 />
+                        <MudCardContent>
+                            <MudLink Href=@($"/gyms/{gym.Id}/{gym.Name}")>@gym.Name</MudLink>
+                        </MudCardContent>
+                    </MudCard>
+                    <MudIconButton Style="width: 50px; height: 50px;" Icon="@Icons.Material.Filled.Delete" OnClick="() => OnRemoveClick(gym.Id)">Remove</MudIconButton>
+                </MudStack>
+            }
+            else
+            {
+                <MudCard Style="width: 800px;">
+                    <MudCardMedia Image="https://lh3.googleusercontent.com/p/AF1QipOwgshDpo2SaKr3GaWZjFnynF3mpWIINxn4hOMe=s1360-w1360-h1020" Height=550 />
+                    <MudCardContent>
+                        <MudLink Href=@($"/gyms/{gym.Id}/{gym.Name}")>@gym.Name</MudLink>
+                    </MudCardContent>
+                </MudCard>
+            }           
+        }
+        @if (State.IsAdmin)
+        {
+            <MudButton Variant="Variant.Filled" OnClick="OpenDialog" Color="Color.Primary">Add Gym</MudButton>
         }
     </MudStack>
 </div>
@@ -18,18 +37,19 @@
 
 @code {
     public List<GymResponse> gyms { get; set; } = [];
+    [Inject] public IDialogService DialogService { get; set; }
     [CascadingParameter] GlobalAppState State { get; set; }
 
-    protected override void OnInitialized()
+    private async Task OpenDialog()
     {
+        DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
 
-        // gyms = [
-        //     new GymResponse{ Id = 1, Address = new AddressResponse(), Name = "branch 1" },
-        //     new GymResponse{ Id = 2, Address = new AddressResponse(), Name = "branch 2" },
-        //     new GymResponse{ Id = 3, Address = new AddressResponse(), Name = "branch 3" },
-        //     new GymResponse{ Id = 4, Address = new AddressResponse(), Name = "branch 4" },
-        // ];
-        base.OnInitialized();
+        var dialog = await DialogService.ShowAsync<DialogGym>("Add Gym", closeOnEscapeKey);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            await OnInitializedAsync();
+        }
     }
 
     protected async override Task OnInitializedAsync()
@@ -48,11 +68,23 @@
         {
             Console.WriteLine(ex);
         }
+    }
 
-
+    public async Task OnRemoveClick(int id)
+    {
+        try
+        {
+            var http = State.CreateClient();
+            var response = await http.DeleteAsync($"Admin/delete-gym/{id}");
+            await OnInitializedAsync();
+        }catch(HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
 
         // var id = 5;
         // gyms = await http.GetFromJsonAsync<>($"https://localhost:7288/Admin/gyms/?hee={id}");
         // var response = http.PostAsJsonAsync("", );
-    }
+
 }

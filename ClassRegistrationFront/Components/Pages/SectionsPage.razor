@@ -1,21 +1,51 @@
-﻿@page "/gyms/{Id:int}"
+﻿@page "/gyms/{Id:int}/{Gym}"
 <PageTitle>Sections</PageTitle>
 <div style="height: 100vh;">
-    <h3>SectionsPage @Id</h3>
+    <h3>@Gym</h3>
 
-    <MudStack>
+    <MudStack AlignItems="AlignItems.Center">
         @foreach(var item in sections)
-        {      
-            <Collapse Item="item" />
+        {
+            if (State.IsAdmin)
+            {
+                <MudStack Row="true" Style="width: auto;" AlignItems="AlignItems.Center">
+                    <Collapse Init="OnInitializedAsync" Item="item"/>
+                    <MudIconButton Style="width: 50px; height: 50px;" Icon="@Icons.Material.Filled.Delete" OnClick="() => OnRemoveClick(item.Id)">Remove</MudIconButton>                
+                </MudStack>
+            } else
+            {
+                <Collapse Init="OnInitializedAsync" Item="item" />
+            }
+        }
+        @if (State.IsAdmin)
+        {
+            <MudButton Style="width: 200px" Variant="Variant.Filled" OnClick="OpenDialog" Color="Color.Primary">Add Section</MudButton>
         }
     </MudStack>
 </div>
 
 @code {
+    [Inject] public IDialogService DialogService { get; set; }
     [Parameter] public int Id { get; set; }
+    [Parameter] public string Gym { get; set; }
     [CascadingParameter] GlobalAppState State { get; set; }
 
     List<SectionResponse> sections = [];
+
+    private async Task OpenDialog()
+    {
+        DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
+        var dialogParameters = new DialogParameters<DialogSection>();
+        dialogParameters.Add(p => p.id, Id);
+
+
+        var dialog = await DialogService.ShowAsync<DialogSection>("Add Section", dialogParameters, closeOnEscapeKey);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            await OnInitializedAsync();
+        }
+    }
 
     protected async override Task OnInitializedAsync()
     {
@@ -27,7 +57,19 @@
         {
             Console.WriteLine(ex);
         }
+    }
 
+    public async Task OnRemoveClick(int id)
+    {
+        try
+        {
+            var http = State.CreateClient();
+            var response = await http.DeleteAsync($"Admin/delete-section/{id}");
+            await OnInitializedAsync();
+        } catch(HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
 
 }

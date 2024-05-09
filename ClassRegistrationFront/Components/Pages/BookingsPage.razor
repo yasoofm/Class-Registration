@@ -1,26 +1,36 @@
 ﻿@page "/Bookings"
 <PageTitle>Bookings</PageTitle>
-<div style="@(Bookings.Count >= 3 ?  "" : "height: 100vh")">
-    <h3>BookingsPage</h3>
-    <MudStack>
-        @foreach(var item in Bookings)
-        {
-            <MudCard>
-                <MudCardHeader>
-                    <MudText Style="font-weight: bold">@item.Section.SectionType</MudText>
-                </MudCardHeader>
-                <MudCardContent>
-                    <MudText>Booked at: @item.CreateAt</MudText>
-                    <MudText>Booking date: @item.Section.Time</MudText>
-                    <MudText>Duration: @item.Section.Duration</MudText>                   
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@(() => OnCancelClick(item.Id))">Cancel</MudButton>
-                </MudCardActions>
-            </MudCard>
-        }       
-    </MudStack>
-</div>
+@if (!State.IsLoggedIn)
+{
+    <div style="height: 100vh;">
+        <h3>Not Logged In</h3>
+    </div>
+}
+else
+{
+    <div style="@(Bookings.Count >= 3 ?  "" : "height: 100vh")">
+        <h3>My Bookings</h3>
+        <MudStack>
+            @foreach (var item in Bookings)
+            {
+                <MudCard>
+                    <MudCardHeader>
+                        <MudText Style="font-weight: bold">@item.Section.SectionType</MudText>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudText>Booked at: @item.CreateAt</MudText>
+                        <MudText>Booking date: @item.Section.Time</MudText>
+                        <MudText>Duration: @item.Section.Duration</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@(() => OnCancelClick(item.Id))">Cancel</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            }
+        </MudStack>
+    </div>
+}
+
 
 
 @code {

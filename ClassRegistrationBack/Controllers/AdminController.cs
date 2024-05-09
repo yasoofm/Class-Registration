@@ -206,7 +206,7 @@ namespace ClassRegistrationBack.Controllers
         {
             try
             {
-                return _context.Users.Include(p => p.Bookings).ThenInclude(p => p.Section).Select(p => new UserResponse
+                return _context.Users.Select(p => new UserResponse
                 {
                     Id = p.Id,
                     PhoneNumber = p.PhoneNumber,
@@ -214,18 +214,6 @@ namespace ClassRegistrationBack.Controllers
                     LastName = p.LastName,
                     Email = p.Email,
                     UserName = p.UserName,
-                    Bookings = p.Bookings.Select(p => new BookingResponse
-                    {
-                        Id = p.Id,
-                        CreateAt = p.CreateAt,
-                        Section = new SectionResponse 
-                        { Id = p.Section.Id,
-                            Capacity = p.Section.Capacity,
-                            Duration = p.Section.Duration, 
-                            SectionType = p.Section.SectionType,
-                            Time = p.Section.Time },
-
-                    }).ToList()
                 })
                 .ToList();
 

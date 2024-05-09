@@ -1,0 +1,55 @@
+﻿<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudDialog>
+        <DialogContent>
+            Section Duration
+            <MudTimePicker Label="Hours" @bind-Time="time" TimeEditMode="TimeEditMode.OnlyHours" Required/>
+            <MudTimePicker Label="Minutes" @bind-Time="time" TimeEditMode="TimeEditMode.OnlyMinutes" Required/>
+            Section Date
+            <MudDatePicker Label="Date" Editable="true" @bind-Date="model.time" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Required/>
+            <MudTimePicker Label="Time" @bind-Time="atime" TimeEditMode="TimeEditMode.Normal" Required />
+            <MudTextField Label="Section Type" @bind-Value="model.sectionType" For="(() => model.sectionType)" Required />
+            <MudTextField Label="Capacity" @bind-Value="model.capacity" For="(() => model.capacity)" Required />
+            <MudTextField Label="Instructor First Name" @bind-Value="model.instructor.firstName" For="(() => model.instructor.firstName)" Required />
+            <MudTextField Label="Instructor Last Name" @bind-Value="model.instructor.lastName" For="(() => model.instructor.lastName)" Required />
+            <MudTextField Label="Instructor Description" @bind-Value="model.instructor.description" For="(() => model.instructor.description)" Required />
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Add</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] GlobalAppState State { get; set; }
+    [Parameter] public int id { get; set; }
+    public AddSectionRequest model = new AddSectionRequest();
+    TimeSpan? time = new TimeSpan(00, 00, 00);
+    TimeSpan? atime = new TimeSpan(00, 00, 00);
+
+    void Cancel() => MudDialog.Cancel();
+    void Submit() => MudDialog.Close(() =>
+    {
+        DialogResult.Ok(true);
+    });
+
+    public async Task OnValidSubmit()
+    {
+        try
+        {
+            TimeOnly duration = TimeOnly.FromTimeSpan(time ?? TimeSpan.Zero);
+            model.time.Value.Add(atime ?? TimeSpan.Zero);
+            model.duration = duration;
+            var http = State.CreateClient();
+            var response = await http.PostAsJsonAsync($"/Admin/add-section/{id}", model);
+            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(id);
+            Submit();
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+}

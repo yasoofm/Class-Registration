@@ -37,7 +37,6 @@
         public string LastName { get; set; }
         public string UserName { get; set; }
         public int PhoneNumber { get; set; }
-        public List<BookingResponse> Bookings { get; set; }
     }
 
 
