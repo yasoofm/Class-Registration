@@ -7,6 +7,7 @@ namespace ClassRegistrationBack.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
 

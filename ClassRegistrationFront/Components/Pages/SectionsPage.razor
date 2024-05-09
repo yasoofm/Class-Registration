@@ -22,7 +22,7 @@
         try
         {
             var http = State.CreateClient();
-            sections = await http.GetFromJsonAsync<List<SectionResponse>>($"/Admin/get-sections/{Id}");
+            sections = await http.GetFromJsonAsync<List<SectionResponse>>($"/User/sections/{Id}");
         } catch (HttpRequestException ex)
         {
             Console.WriteLine(ex);

@@ -48,8 +48,6 @@ namespace ClassRegistrationBack
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-
             app.UseAuthentication();
             app.UseAuthorization();
 

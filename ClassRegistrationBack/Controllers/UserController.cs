@@ -1,4 +1,5 @@
 ﻿using ClassRegistrationBack.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static ClassRegistrationBack.Model.EditProfile;
@@ -7,6 +8,7 @@ namespace ClassRegistrationBack.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize(Roles = "User, Admin")]
     public class UserController : ControllerBase
 
     {
@@ -40,16 +42,18 @@ namespace ClassRegistrationBack.Controllers
         [ProducesResponseType(typeof(ActionResult), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [AllowAnonymous]
         public ActionResult<IEnumerable<GymResponse>> Gyms()
         {
             return _context.Gyms.Select(p => new GymResponse() { Id = p.Id, Name = p.Name }).ToList();
             
         }
         
-        [HttpGet("/sections/{id}")]
+        [HttpGet("sections/{id}")]
         [ProducesResponseType(typeof(IActionResult), 200)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [AllowAnonymous]
         public ActionResult<List<SectionResponse>> GetSections(int id)
         {
             try
